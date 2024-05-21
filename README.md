@@ -1,30 +1,9 @@
-# React + TypeScript + Vite
+# Turnip React
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A react version for our website.
 
-Currently, two official plugins are available:
+## Why?
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+I realized that my React skills are getting rusty. This might seem so inefficient but I'm making a subdomain react.turnipxenon.com using React solely for refreshing myself with how to use React. I also don't have any public repository with more refined React examples, so here it is.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+To be honest, the reason why I'm starting this is that I had a coding interview where I had to code in React. I was so rusty in React that it took me almost two hours making a calculator app that was so unsatisfactory with what I could have had. Next time, I want to be prepared. I'll try swapping between Svelte and React, because I personally love Svelte, and I don't wanna quit using it to focus on React solely for skill purposes.

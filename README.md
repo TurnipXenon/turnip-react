@@ -12,9 +12,19 @@ Is this a blatant resume padder? Yep! <3 But hey, I gotta I know all of these, a
 
 ## Tech Stack
 
-- Vercel
+- Docker
 - Porkbun
 - NextJS
 - TailwindCSS
 - React
 - Typescript
+
+## Using Docker
+
+> from https://github.com/vercel/next.js/tree/canary/examples/with-docker
+
+1. Install Docker on your machine.
+2. Build your container: `docker build -t nextjs-docker .`.
+3. Run your container: `docker run -p 3000:3000 nextjs-docker`.
+
+You can view your images created with docker images.

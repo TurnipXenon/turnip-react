@@ -37,9 +37,9 @@ jobs:
         id: build-publish
         shell: bash
         run: |
-          echo "${{secrets.aws_account_id}}.dkr.ecr.us-west-2.amazonaws.com/turnipreactinfrastack-turnipreact2be52df6-11pzkecigkb9:latest" >> $REPO_NAME
-          docker build -t "${{REPO_NAME}}" .
-          docker push ${{REPO_NAME}}"
+          echo "REPO_NAME=${{secrets.aws_account_id}}.dkr.ecr.us-west-2.amazonaws.com/turnipreactinfrastack-turnipreact2be52df6-11pzkecigkb9:latest" >> $GITHUB_ENV
+          docker build -t "${{env.REPO_NAME}}" .
+          docker push ${{env.REPO_NAME}}"
 #          echo "IMAGE $IMAGE_TAG is pushed to $ECR_REGISTRY/$ECR_REPOSITORY"
 #          echo "image_tag=$IMAGE_TAG"
 #          echo "full_image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

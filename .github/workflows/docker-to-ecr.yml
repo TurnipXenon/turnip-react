@@ -37,7 +37,7 @@ jobs:
         id: build-publish
         shell: bash
         run: |
-          echo "REPO_NAME=${{secrets.aws_account_id}}.dkr.ecr.us-west-2.amazonaws.com/turnipreactinfrastack-turnipreact2be52df6-11pzkecigkb9:latest" >> $GITHUB_ENV
+          echo "REPO_NAME=${{secrets.aws_account_id}}.dkr.ecr.us-west-2.amazonaws.com/turnipreactinfrastack-turnipreact2be52df6-11pzkecigkb9:latest" >> "$GITHUB_ENV"
           echo "{{env.REPO_NAME}}"
           docker build -t "${{env.REPO_NAME}}" .
           docker push ${{env.REPO_NAME}}"

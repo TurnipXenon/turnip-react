@@ -20,10 +20,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # todo: delete after one merge
+      - run: echo "arn:aws:iam::${{ secrets.aws_account_id }}:role/TurnipReactInfraStack-LogicGithubActionRole4C78B53C-aDy2hpNoxWlY"
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::${{ inputs.aws_account_id }}:role/TurnipReactInfraStack-CDKGithubActionRoleB8896D7A-fc37CpSiGtnC
+          role-to-assume: arn:aws:iam::${{ secrets.aws_account_id }}:role/TurnipReactInfraStack-LogicGithubActionRole4C78B53C-aDy2hpNoxWlY
           aws-region: us-west-2
 
       - name: Login to Amazon ECR
@@ -36,10 +39,6 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         id: build-publish
         shell: bash
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ env.ECR_REPO_NAME }}
-          IMAGE_TAG: ${{ inputs.image_tag }}
         run: |
           echo "${secrets.aws_account_id}761736783364.dkr.ecr.us-west-2.amazonaws.com/turnipreactinfrastack-turnipreact2be52df6-11pzkecigkb9:latest" >> $REPO_NAME
           docker build -t "${REPO_NAME}" .

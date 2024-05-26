@@ -1,0 +1,49 @@
+# https://github.com/aws-actions/amazon-ecr-login?tab=readme-ov-file#permissions
+name: Docker image build and publish
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    outputs:
+      image_tag: ${{ steps.build-publish.outputs.image_tag }}
+      full_image: ${{ steps.build-publish.outputs.full_image }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::${{ inputs.aws_account_id }}:role/TurnipReactInfraStack-CDKGithubActionRoleB8896D7A-fc37CpSiGtnC
+          aws-region: us-west-2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          registries: ${{ secrets.aws_account_id }}
+          mask-password: "true" # see: https://github.com/aws-actions/amazon-ecr-login#docker-credentials
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-publish
+        shell: bash
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ env.ECR_REPO_NAME }}
+          IMAGE_TAG: ${{ inputs.image_tag }}
+        run: |
+          echo "${secrets.aws_account_id}761736783364.dkr.ecr.us-west-2.amazonaws.com/turnipreactinfrastack-turnipreact2be52df6-11pzkecigkb9:latest" >> $REPO_NAME
+          docker build -t "${REPO_NAME}" .
+          docker push ${REPO_NAME}"
+#          echo "IMAGE $IMAGE_TAG is pushed to $ECR_REGISTRY/$ECR_REPOSITORY"
+#          echo "image_tag=$IMAGE_TAG"
+#          echo "full_image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

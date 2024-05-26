@@ -20,9 +20,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # todo: delete after one merge
-      - run: echo "arn:aws:iam::${{ secrets.aws_account_id }}:role/TurnipReactInfraStack-LogicGithubActionRole4C78B53C-aDy2hpNoxWlY"
-
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -40,9 +37,9 @@ jobs:
         id: build-publish
         shell: bash
         run: |
-          echo "${secrets.aws_account_id}761736783364.dkr.ecr.us-west-2.amazonaws.com/turnipreactinfrastack-turnipreact2be52df6-11pzkecigkb9:latest" >> $REPO_NAME
-          docker build -t "${REPO_NAME}" .
-          docker push ${REPO_NAME}"
+          echo "${{secrets.aws_account_id}}.dkr.ecr.us-west-2.amazonaws.com/turnipreactinfrastack-turnipreact2be52df6-11pzkecigkb9:latest" >> $REPO_NAME
+          docker build -t "${{REPO_NAME}}" .
+          docker push ${{REPO_NAME}}"
 #          echo "IMAGE $IMAGE_TAG is pushed to $ECR_REGISTRY/$ECR_REPOSITORY"
 #          echo "image_tag=$IMAGE_TAG"
 #          echo "full_image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

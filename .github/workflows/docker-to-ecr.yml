@@ -42,3 +42,8 @@ jobs:
         run: |
           docker build -t "$REPO_NAME" .
           docker push "$REPO_NAME"
+
+      - name: Update ECS
+        run: |
+          aws lambda invoke --function-name ${{secrets.DEPLOYER_LAMBDA_NAME}} response.json
+          # note to self: you also need to be logged in AWS to invoke the lambda

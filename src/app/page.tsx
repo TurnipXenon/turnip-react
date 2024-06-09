@@ -1,11 +1,9 @@
-import '@mantine/core/styles.css';
 import {Anchor, Text, Title} from "@mantine/core";
-import {ColorSchemeToggle} from "@/components/client-side/ColorSchemeToggle";
+import {ColorSchemeToggle} from "@/components/ColorSchemeToggle";
 
 export default async function Home() {
     return (
         <main className="flex min-h-screen flex-col items-center">
-            {/* eslint-disable-next-line react/jsx-no-undef */}
             <Title ta="center" mt={100}>
                 Welcome to Turnip&apos;s Home (React version)
             </Title>
@@ -19,6 +17,10 @@ export default async function Home() {
             </Text>
             <Title mt="xl" order={3}>Color scheme toggle</Title>
             <ColorSchemeToggle></ColorSchemeToggle>
+            <Title mt="xl" order={3}>Directory</Title>
+            <ul>
+                <li><Anchor href="/job-tracker">Job Tracker App</Anchor></li>
+            </ul>
         </main>
     );
 }

@@ -34,13 +34,19 @@ jobs:
           registries: ${{ secrets.aws_account_id }}
           mask-password: "true" # see: https://github.com/aws-actions/amazon-ecr-login#docker-credentials
 
-      - name: Set repo name for main
+      - name: Set variables main
         if: ${{ github.ref_name == 'main' }}
-        run: echo "REPO_NAME=${{secrets.aws_account_id}}.dkr.ecr.us-west-2.amazonaws.com/turnipreactinfrastackturnipreactprod3f426b76-turnipreactprodrepositorydca90c89-gofxzzflfzgm:latest" >> "$GITHUB_ENV"
+        run: |
+          echo "REPO_NAME=${{secrets.aws_account_id}}.dkr.ecr.us-west-2.amazonaws.com/turnipreactinfrastackturnipreactprod3f426b76-turnipreactprodrepositorydca90c89-gofxzzflfzgm:latest" >> "$GITHUB_ENV"
+          echo "::add-mask::${{secrets.MAIN_DEPLOYER_LAMBDA_NAME}}"
+          echo "LAMBDA_NAME=${{secrets.MAIN_DEPLOYER_LAMBDA_NAME}}" >> "$GITHUB_ENV"
 
-      - name: Set repo name for turnip/dev
+      - name: Set variables for turnip/dev
         if: ${{ github.ref_name == 'turnip/dev' }}
-        run: echo "REPO_NAME=${{secrets.aws_account_id}}.dkr.ecr.us-west-2.amazonaws.com/turnipreactinfrastackturnipreactstaging80ac9d6d-turnipreactstagingrepository40cb56f2-yg7afhsa40f2:latest" >> "$GITHUB_ENV"
+        run: |
+          echo "REPO_NAME=${{secrets.aws_account_id}}.dkr.ecr.us-west-2.amazonaws.com/turnipreactinfrastackturnipreactstaging80ac9d6d-turnipreactstagingrepository40cb56f2-yg7afhsa40f2:latest" >> "$GITHUB_ENV"
+          echo "::add-mask::${{secrets.STAGING_DEPLOYER_LAMBDA_NAME}}"
+          echo "LAMBDA_NAME=${{secrets.STAGING_DEPLOYER_LAMBDA_NAME}}" >> "$GITHUB_ENV"
 
       # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#example-of-writing-an-environment-variable-to-github_env
       - name: Build, tag, and push image to Amazon ECR
@@ -52,5 +58,5 @@ jobs:
 
       - name: Update ECS
         run: |
-          aws lambda invoke --function-name ${{secrets.DEPLOYER_LAMBDA_NAME}} response.json
+          aws lambda invoke --function-name "$LAMBDA_NAME" response.json
           # note to self: you also need to be logged in AWS to invoke the lambda

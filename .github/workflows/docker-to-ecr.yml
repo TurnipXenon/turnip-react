@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - turnip/dev
 
 jobs:
   docker:
@@ -33,7 +34,13 @@ jobs:
           registries: ${{ secrets.aws_account_id }}
           mask-password: "true" # see: https://github.com/aws-actions/amazon-ecr-login#docker-credentials
 
-      - run: echo "REPO_NAME=${{secrets.aws_account_id}}.dkr.ecr.us-west-2.amazonaws.com/turnipreactinfrastack-turnipreact2be52df6-11pzkecigkb9:latest" >> "$GITHUB_ENV"
+      - name: Set repo name for main
+        if: ${{ github.ref_name == 'main' }}
+        run: echo "REPO_NAME=${{secrets.aws_account_id}}.dkr.ecr.us-west-2.amazonaws.com/turnipreactinfrastackturnipreactprod3f426b76-turnipreactprodrepositorydca90c89-gofxzzflfzgm:latest" >> "$GITHUB_ENV"
+
+      - name: Set repo name for turnip/dev
+        if: ${{ github.ref_name == 'turnip/dev' }}
+        run: echo "REPO_NAME=${{secrets.aws_account_id}}.dkr.ecr.us-west-2.amazonaws.com/turnipreactinfrastackturnipreactstaging80ac9d6d-turnipreactstagingrepository40cb56f2-yg7afhsa40f2:latest" >> "$GITHUB_ENV"
 
       # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#example-of-writing-an-environment-variable-to-github_env
       - name: Build, tag, and push image to Amazon ECR

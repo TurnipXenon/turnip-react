@@ -1,0 +1,55 @@
+// schema.prisma
+// todo: we're currently here: https://vercel.com/guides/nextjs-prisma-postgres#step-3-setup-prisma-and-create-the-database-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL")
+}
+
+// model used in my portfolio site
+model SeaweedParams {
+  slug        String @id
+  queryParams String
+}
+
+model JobEvents {
+  id              String   @id @default(cuid())
+  anonymizedNotes String
+  publicNotes     String
+  eventDate       DateTime @default(now())
+
+  JobPosting   JobPosting @relation(fields: [jobPostingId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  jobPostingId String
+}
+
+model JobPosting {
+  id         String  @id @default(cuid())
+  alias      String?
+  company    String?
+  jobTitle   String?
+  isPublic   Boolean @default(false)
+  jobLink    String?
+  resumeLink String?
+
+  JobSession JobSession @relation(fields: [sessionId, userId], references: [id, userId], onDelete: Cascade, onUpdate: Cascade)
+  sessionId  String
+  userId     String
+
+  events JobEvents[]
+}
+
+model JobSession {
+  id         String       @id @default(cuid())
+  userId     String
+  title      String?
+  startDate  DateTime     @default(now())
+  endDate    DateTime?
+  isPublic   Boolean      @default(false)
+  JobPosting JobPosting[]
+
+  @@unique([id, userId])
+}

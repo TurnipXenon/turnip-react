@@ -20,3 +20,8 @@ body {
         text-wrap: balance;
     }
 }
+
+.mantine-TextInput-root,
+.mantine-PasswordInput-root {
+    margin-top: 0.5lh;
+}

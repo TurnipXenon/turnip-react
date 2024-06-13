@@ -1,13 +1,23 @@
 openapi: 3.0.0
 info:
   title: Turnip React API
-  version: 0.1.0
+  version: 0.2.0
 
 servers:
   - url: http://localhost:3000
     description: Local test server
   - url: https://react.turnipxenon.com
     description: Production server
+
+components:
+  schemas:
+    PublicUser:
+      type: object
+      required:
+        - username
+      properties:
+        username:
+          type: string
 
 paths:
   /api/login:
@@ -33,11 +43,6 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required:
-                  - username
-                properties:
-                  username:
-                    type: string
+                $ref: "#/components/schemas/PublicUser"
         '401':
           description: Login error

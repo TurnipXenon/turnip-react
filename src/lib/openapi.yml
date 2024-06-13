@@ -1,0 +1,43 @@
+openapi: 3.0.0
+info:
+  title: Turnip React API
+  version: 0.1.0
+
+servers:
+  - url: http://localhost:3000
+    description: Local test server
+  - url: https://react.turnipxenon.com
+    description: Production server
+
+paths:
+  /api/login:
+    post:
+      summary: Login as a users to be able to do more things in the website
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - username
+                properties:
+                  username:
+                    type: string
+        '401':
+          description: Login error

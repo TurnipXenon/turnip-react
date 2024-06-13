@@ -2,6 +2,7 @@
 
 import {useForm} from "@mantine/form";
 import {Button, Group, PasswordInput, TextInput} from "@mantine/core";
+import {DefaultApi} from "@/lib/openapi/index";
 
 interface FormValues {
     email: string,
@@ -18,7 +19,16 @@ export default function LoginForm() {
     });
 
     const submit = (values: FormValues) => {
-        console.log(values);
+        // todo: save as a state?
+        const app = new DefaultApi();
+        app.apiLoginPost({
+            email: values.email,
+            password: values.password,
+        }).then(onfullfilled => {
+            window.location.href = `job-tracker/users/${onfullfilled.data.username}`;
+        }, onrejected => {
+            console.error(onrejected);
+        });
     };
 
     return (

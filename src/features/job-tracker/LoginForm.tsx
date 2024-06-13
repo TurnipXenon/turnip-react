@@ -19,13 +19,13 @@ export default function LoginForm() {
     });
 
     const submit = (values: FormValues) => {
-        // todo: save as a state?
-        const app = new DefaultApi();
+        // todo: save as a state? or in a centralized location
+        const app = new DefaultApi(undefined, window.location.origin);
         app.apiLoginPost({
             email: values.email,
             password: values.password,
         }).then(onfullfilled => {
-            window.location.href = `job-tracker/users/${onfullfilled.data.username}`;
+            window.location.href = `/job-tracker/users/${onfullfilled.data.username}`;
         }, onrejected => {
             console.error(onrejected);
         });

@@ -5,9 +5,17 @@ export interface SlugGeneric<T> {
 export interface DefaultSlug extends SlugGeneric<{ slug: string }> {
 }
 
-interface CurrentSlug {
+interface UserSlug {
     userId: string;
 }
 
-export interface UserRouteSlug extends SlugGeneric<CurrentSlug> {
+interface SessionSlug {
+    userId: string;
+    sessionId: string;
+}
+
+export interface UserRouteSlug extends SlugGeneric<UserSlug> {
+}
+
+export interface SessionRouteSlug extends SlugGeneric<SessionSlug> {
 }

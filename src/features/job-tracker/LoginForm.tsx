@@ -2,7 +2,8 @@
 
 import {useForm} from "@mantine/form";
 import {Button, Group, PasswordInput, TextInput} from "@mantine/core";
-import {DefaultApi} from "@/lib/openapi/index";
+import {TurnipContext} from "@/app/context";
+import {useContext} from "react";
 
 interface FormValues {
     email: string,
@@ -10,6 +11,8 @@ interface FormValues {
 }
 
 export default function LoginForm() {
+    const {api} = useContext(TurnipContext);
+
     const form = useForm<FormValues>({
         mode: 'uncontrolled',
         initialValues: {
@@ -19,13 +22,11 @@ export default function LoginForm() {
     });
 
     const submit = (values: FormValues) => {
-        // todo: save as a state? or in a centralized location
-        const app = new DefaultApi(undefined, window.location.origin);
-        app.apiLoginPost({
+        api.apiLoginPost({
             email: values.email,
             password: values.password,
         }).then(onfullfilled => {
-            window.location.href = `/job-tracker/users/${onfullfilled.data.username}`;
+            window.location.href = `/job-tracker/users/${onfullfilled.data.id}`;
         }, onrejected => {
             console.error(onrejected);
         });

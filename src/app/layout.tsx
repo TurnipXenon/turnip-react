@@ -4,6 +4,7 @@ import "./globals.css";
 import '@mantine/core/styles.css';
 import {ColorSchemeScript, MantineProvider} from "@mantine/core";
 import {theme} from "@/app/theme";
+import TurnipProvider from "@/app/context";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -21,7 +22,9 @@ export default function RootLayout({children}: Readonly<{
             <ColorSchemeScript/>
         </head>
         <body className={inter.className}>
-        <MantineProvider theme={theme}>{children}</MantineProvider>
+        <TurnipProvider>
+            <MantineProvider theme={theme}>{children}</MantineProvider>
+        </TurnipProvider>
         </body>
         </html>
     );

@@ -3,11 +3,13 @@ import type {NextRequest} from 'next/server';
 import {TurnipAuth} from "@/lib/auth";
 
 export function middleware(request: NextRequest) {
-    const maybeUser = TurnipAuth.isAuthenticated(request)
+    const maybeUser = TurnipAuth.isAuthenticated(request);
     if (maybeUser) {
         // no redirects
         return;
     }
+
+    // todo: if login, redirect to /users/[user]
 
     // todo: send to error page if not authorized
     return NextResponse.redirect(new URL('/', request.url));

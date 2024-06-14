@@ -13,9 +13,11 @@ class TurnipAuthImpl implements ITurnipAuth {
         let token = request.cookies.get("token");
         if (token?.value === process.env.USER_TOKEN
             && process.env.USER_TOKEN
-            && process.env.USER_USERNAME) {
+            && process.env.USER_USERNAME
+            && process.env.USER_ID) {
             return {
-                username: process.env.USER_USERNAME
+                username: process.env.USER_USERNAME,
+                id: process.env.USER_ID
             };
         }
 
@@ -25,11 +27,13 @@ class TurnipAuthImpl implements ITurnipAuth {
     login = async (request: NextRequest) => {
         const requestData = await request.json() as ApiLoginPostRequest;
         if (process.env.USER_PASSWORD
+            && process.env.USER_ID
             && requestData.email === process.env.USER_EMAIL
             && requestData.password === process.env.USER_PASSWORD) {
 
             const resp = NextResponse.json<PublicUser>({
-                username: process.env.USER_USERNAME ?? "turnip"
+                username: process.env.USER_USERNAME ?? "turnip",
+                id: process.env.USER_ID ?? "turnip"
             },);
 
             resp.cookies.set({

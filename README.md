@@ -28,3 +28,8 @@ Is this a blatant resume padder? Yep! <3 But hey, I gotta I know all of these, a
 3. Run your container: `docker run -p 3000:3000 nextjs-docker`.
 
 You can view your images created with docker images.
+
+## Notes
+
+- generate OpenAPI using typescript-axios
+  - should be in src/lib/openapi

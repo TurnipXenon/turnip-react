@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Turnip React API
-  version: 0.3.0
+  version: 0.4.0
 
 servers:
   - url: https://react.turnipxenon.com
@@ -15,8 +15,11 @@ components:
       type: object
       required:
         - username
+        - id
       properties:
         username:
+          type: string
+        id:
           type: string
     JobSession:
       type: object
@@ -48,6 +51,13 @@ components:
       description: The session ID
       schema:
         type: string
+    UserParameterID:
+      name: userId   # Note the name is the same as in the path
+      in: path
+      required: true
+      description: The user ID
+      schema:
+        type: string
 
 paths:
   /api/login:
@@ -77,9 +87,11 @@ paths:
         '401':
           description: Login error
 
-  /api/job-tracker/sessions:
+  /api/job-tracker/users/{userId}/sessions:
     post:
       summary: Create new job session
+      parameters:
+        - $ref: "#/components/parameters/UserParameterID"
       requestBody:
         required: true
         content:
@@ -98,11 +110,29 @@ paths:
                 $ref: "#/components/schemas/JobSession"
         '401':
           description: Unauthorized error
+    get:
+      summary: Get all job sessions for the user
+      parameters:
+        - $ref: "#/components/parameters/UserParameterID"
+      responses:
+        '200':
+          description: Job sessions found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/JobSession"
+        '401':
+          description: Unauthorized error
+        '404':
+          description: Missing job session
 
-  /api/job-tracker/sessions/{sessionId}:
+  /api/job-tracker/users/{userId}/sessions/{sessionId}:
     get:
       summary: Get job session
       parameters:
+        - $ref: "#/components/parameters/UserParameterID"
         - $ref: "#/components/parameters/JobSessionParameterID"
       responses:
         '200':
@@ -118,6 +148,7 @@ paths:
     put:
       summary: Update job session
       parameters:
+        - $ref: "#/components/parameters/UserParameterID"
         - $ref: "#/components/parameters/JobSessionParameterID"
       requestBody:
         required: true
@@ -141,6 +172,7 @@ paths:
     delete:
       summary: Delete job session
       parameters:
+        - $ref: "#/components/parameters/UserParameterID"
         - $ref: "#/components/parameters/JobSessionParameterID"
       responses:
         '200':

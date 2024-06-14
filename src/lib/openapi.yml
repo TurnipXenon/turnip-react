@@ -1,13 +1,13 @@
 openapi: 3.0.0
 info:
   title: Turnip React API
-  version: 0.2.0
+  version: 0.3.0
 
 servers:
-  - url: http://localhost:3000
-    description: Local test server
   - url: https://react.turnipxenon.com
     description: Production server
+  - url: http://localhost:3000
+    description: Local test server
 
 components:
   schemas:
@@ -18,6 +18,36 @@ components:
       properties:
         username:
           type: string
+    JobSession:
+      type: object
+      required:
+        - id
+        - userId
+        - title
+        - startDate
+        - endDate
+        - isPublic
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        title:
+          type: string
+        startDate:
+          type: string
+        endDate:
+          type: string
+        isPublic:
+          type: boolean
+  parameters:
+    JobSessionParameterID:
+      name: sessionId   # Note the name is the same as in the path
+      in: path
+      required: true
+      description: The session ID
+      schema:
+        type: string
 
 paths:
   /api/login:
@@ -46,3 +76,76 @@ paths:
                 $ref: "#/components/schemas/PublicUser"
         '401':
           description: Login error
+
+  /api/job-tracker/sessions:
+    post:
+      summary: Create new job session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+      responses:
+        '200':
+          description: Job sessions created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobSession"
+        '401':
+          description: Unauthorized error
+
+  /api/job-tracker/sessions/{sessionId}:
+    get:
+      summary: Get job session
+      parameters:
+        - $ref: "#/components/parameters/JobSessionParameterID"
+      responses:
+        '200':
+          description: Job session found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobSession"
+        '401':
+          description: Unauthorized error
+        '404':
+          description: Missing job session
+    put:
+      summary: Update job session
+      parameters:
+        - $ref: "#/components/parameters/JobSessionParameterID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JobSession"
+      responses:
+        '200':
+          description: Job session found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobSession"
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized error
+        '404':
+          description: Missing job session
+    delete:
+      summary: Delete job session
+      parameters:
+        - $ref: "#/components/parameters/JobSessionParameterID"
+      responses:
+        '200':
+          description: Successfully delete job session
+        '401':
+          description: Unauthorized error
+        '404':
+          description: Missing job session

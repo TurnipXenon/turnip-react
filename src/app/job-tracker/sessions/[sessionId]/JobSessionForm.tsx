@@ -2,27 +2,42 @@
 
 import {Button, Text} from "@mantine/core";
 import {SessionRouteSlug} from "@/lib/models/SlugGeneric";
-import {useContext, useState} from "react";
-import {JobSession} from "@/lib/openapi/index";
+import {useContext, useEffect, useState} from "react";
+import {JobPosting, JobSession} from "@/lib/openapi/index";
 import {TurnipContext} from "@/app/context";
 import {useEffectOnce} from "@/lib/hooks/useEffectOnce";
-import {createIncludePostingParams} from "@/app/api/job-tracker/sessions/[sessionId]/routeParams";
+import JobPostingForm from "@/app/job-tracker/sessions/[sessionId]/JobPostingForm";
 
 // todo: paginate events since we dont want to pull 100+ events
+// todo: sort if from latest by default
 export default function JobSessionForm({params}: SessionRouteSlug) {
     const [session, setSession] = useState<JobSession>();
+    const [jobList, setJobList] = useState<JobPosting[]>();
     const {api} = useContext(TurnipContext);
 
     useEffectOnce(() => {
-        api.apiJobTrackerSessionsSessionIdGet(params.sessionId, {
-            params: createIncludePostingParams()
-        }).then(
+        api.apiJobTrackerSessionsSessionIdGet(params.sessionId).then(
             onfulfilled => {
                 setSession(onfulfilled.data);
             }, onrejected => {
                 console.error(onrejected);
             });
     });
+
+    useEffect(() => {
+        if (!session || jobList) {
+            return;
+        }
+
+        // todo: add pagination
+        api.apiJobTrackerSessionsSessionIdPostingsGet(params.sessionId).then(
+            onfulfilled => {
+                setJobList(onfulfilled.data);
+            }, onrejected => {
+                console.log(onrejected);
+            }
+        );
+    }, [session, jobList, api, params.sessionId]);
 
     const createJobPostingClick = () => {
         api.apiJobTrackerSessionsSessionIdPostingsPost(params.sessionId, {}).then(
@@ -46,10 +61,10 @@ export default function JobSessionForm({params}: SessionRouteSlug) {
                     <Text>isPublic: {session?.isPublic}</Text>
                     <Text>Postings</Text>
                     {
-                        session.jobPostings?.map((posting, index) => {
-                            return <div key={`posting-${index}`}>
-                                <Text>{posting.id}</Text>
-                            </div>;
+                        jobList?.map((posting, index) => {
+                            return <JobPostingForm key={`posting-${index}`}
+                                                   posting={posting}>
+                            </JobPostingForm>;
                         })
                     }
                 </div>

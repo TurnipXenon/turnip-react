@@ -2,8 +2,7 @@ export interface SlugGeneric<T> {
     params: T;
 }
 
-export interface DefaultSlug extends SlugGeneric<{ slug: string }> {
-}
+export type DefaultSlug = SlugGeneric<{ slug: string }>;
 
 interface UserSlug {
     userId: string;
@@ -17,11 +16,14 @@ interface PostingSlug {
     postingId: string;
 }
 
-export interface UserRouteSlug extends SlugGeneric<UserSlug> {
+interface EventSlug {
+    eventId: string;
 }
 
-export interface SessionRouteSlug extends SlugGeneric<SessionSlug> {
-}
+export type UserRouteSlug = SlugGeneric<UserSlug>;
 
-export interface PostingRouteSlug extends SlugGeneric<PostingSlug> {
-}
+export type SessionRouteSlug = SlugGeneric<SessionSlug>;
+
+export type PostingRouteSlug = SlugGeneric<PostingSlug>;
+
+export type EventRouteSlug = SlugGeneric<EventSlug>;

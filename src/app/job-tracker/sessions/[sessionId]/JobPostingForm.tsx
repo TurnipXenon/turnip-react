@@ -1,7 +1,7 @@
-import {JobPosting} from "@/lib/openapi/index";
-import {Button, Text, TextInput} from "@mantine/core";
+import {JobEvent, JobPosting, JobPostingStatusEnum} from "@/lib/openapi/index";
+import {Button, Select, Text, TextInput} from "@mantine/core";
 import {useForm} from "@mantine/form";
-import {useContext} from "react";
+import {useContext, useEffect, useState} from "react";
 import {TurnipContext} from "@/app/context";
 import {MutableJobPosting} from "@/app/api/job-tracker/postings/[postingId]/route";
 
@@ -12,9 +12,37 @@ export interface JobPostingFormProps {
 
 export default function JobPostingForm(props: JobPostingFormProps) {
     const {api} = useContext(TurnipContext);
+    const [eventList, setEventList] = useState<JobEvent[]>();
+
+    useEffect(() => {
+        if (eventList) {
+            return;
+        }
+
+        console.log("loading");
+        api.apiJobTrackerPostingsPostingIdEventsGet(props.posting.id).then(
+            onfulfilled => {
+                setEventList(onfulfilled.data);
+            }, onrejected => {
+                console.error(onrejected);
+            }
+        );
+    }, [api, eventList, props.posting.id]);
+
+    const form = useForm<MutableJobPosting>({
+        mode: 'uncontrolled',
+        initialValues: {
+            alias: props.posting.alias ?? "",
+            company: props.posting.company ?? "",
+            jobTitle: props.posting.jobTitle ?? "",
+            jobLink: props.posting.jobLink ?? "",
+            resumeLink: props.posting.resumeLink ?? "",
+            status: props.posting.status ?? JobPostingStatusEnum.Queued,
+        },
+    });
 
     const onClickSave = (values: MutableJobPosting) => {
-        console.log(values);
+        // todo: save all events too
         api.apiJobTrackerPostingsPostingIdPut(props.posting.id, {
             id: props.posting.id,
             ...values
@@ -27,16 +55,20 @@ export default function JobPostingForm(props: JobPostingFormProps) {
         );
     };
 
-    const form = useForm<MutableJobPosting>({
-        mode: 'uncontrolled',
-        initialValues: {
-            alias: props.posting.alias ?? "",
-            company: props.posting.company ?? "",
-            jobTitle: props.posting.jobTitle ?? "",
-            jobLink: props.posting.jobLink ?? "",
-            resumeLink: props.posting.resumeLink ?? "",
-        },
-    });
+    const onCreateJobEvent = () => {
+        api.apiJobTrackerPostingsPostingIdEventsPost(props.posting.id, {}).then(
+            onfulfilled => {
+                eventList?.unshift(onfulfilled.data);
+                console.log("Here");
+                if (eventList) {
+                    console.log(eventList);
+                    setEventList(eventList.slice());
+                }
+            }, onrejected => {
+                console.error(onrejected);
+            }
+        );
+    };
 
     return <div key={props.posting.id}>
         <form onSubmit={form.onSubmit(onClickSave)}>
@@ -62,6 +94,21 @@ export default function JobPostingForm(props: JobPostingFormProps) {
                 label="Resume link"
                 key={form.key('resumeLink')}
                 {...form.getInputProps('resumeLink')}></TextInput>
+            <Select label="Status"
+                    key={form.key('status')}
+                    {...form.getInputProps('status')}
+                    data={Object.values(JobPostingStatusEnum)}></Select>
+            <Button onClick={onCreateJobEvent}>Create event</Button>
+            <div>
+                {
+                    eventList?.map(e => {
+                        return <div key={e.id}>
+                            <Text>----</Text>
+                            <Text>ID: {e.id}</Text>
+                        </div>;
+                    })
+                }
+            </div>
             <Button type="submit">Save</Button>
         </form>
     </div>;

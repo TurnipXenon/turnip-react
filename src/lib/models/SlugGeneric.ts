@@ -10,7 +10,6 @@ interface UserSlug {
 }
 
 interface SessionSlug {
-    userId: string;
     sessionId: string;
 }
 

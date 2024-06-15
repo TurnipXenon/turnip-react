@@ -32,7 +32,7 @@ export default function JobSessionList({params}: UserRouteSlug) {
 
     const onButtonClick = (id: string): () => void => {
         return () => {
-            window.location.href += `/sessions/${id}`;
+            window.location.href = `${window.location.origin}/job-tracker/sessions/${id}`;
         };
     };
 

@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Turnip React API
-  version: 0.4.0
+  version: 0.5.0
 
 servers:
   - url: https://react.turnipxenon.com
@@ -265,7 +265,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/JobSession"
+                allOf:
+                  - $ref: "#/components/schemas/JobSession"
+                  - type: object
+                    properties:
+                      cursorId:
+                        type: string
         '401':
           description: Unauthorized error
     get:
@@ -297,9 +302,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/JobPosting"
+                $ref: "#/components/schemas/JobPosting"
         '401':
           description: Unauthorized error
         '404':

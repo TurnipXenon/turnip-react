@@ -27,20 +27,29 @@ model JobEvents {
 }
 
 model JobPosting {
-  id         String   @id @default(cuid())
+  id         String     @id @default(cuid())
   alias      String?
   company    String?
   jobTitle   String?
-  isPublic   Boolean  @default(false)
+  isPublic   Boolean    @default(false)
   jobLink    String?
   resumeLink String?
-  startDate  DateTime @default(now())
+  startDate  DateTime   @default(now())
+  status     PostStatus @default(Queued)
 
   JobSession JobSession @relation(fields: [sessionId, userId], references: [id, userId], onDelete: Cascade, onUpdate: Cascade)
   sessionId  String
   userId     String
 
   events JobEvents[]
+}
+
+enum PostStatus {
+  Queued
+  Archived
+  Waiting
+  Active
+  Rejected
 }
 
 model JobSession {

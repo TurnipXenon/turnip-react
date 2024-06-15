@@ -34,7 +34,7 @@ model JobPosting {
   isPublic   Boolean  @default(false)
   jobLink    String?
   resumeLink String?
-  startDate  DateTime
+  startDate  DateTime @default(now())
 
   JobSession JobSession @relation(fields: [sessionId, userId], references: [id, userId], onDelete: Cascade, onUpdate: Cascade)
   sessionId  String
@@ -44,13 +44,13 @@ model JobPosting {
 }
 
 model JobSession {
-  id         String       @id @default(cuid())
-  userId     String
-  title      String?
-  startDate  DateTime     @default(now())
-  endDate    DateTime?
-  isPublic   Boolean      @default(false)
-  JobPosting JobPosting[]
+  id          String       @id @default(cuid())
+  userId      String
+  title       String?
+  startDate   DateTime     @default(now())
+  endDate     DateTime?
+  isPublic    Boolean      @default(false)
+  jobPostings JobPosting[]
 
   @@unique([id, userId])
 }

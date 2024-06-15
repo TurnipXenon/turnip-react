@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Turnip React API
-  version: 0.5.0
+  version: 0.6.0
 
 servers:
   - url: https://react.turnipxenon.com
@@ -59,6 +59,14 @@ components:
           type: string
         userId:
           type: string
+        status:
+          type: string
+          enum:
+            - Queued
+            - Archived
+            - Waiting
+            - Active
+            - Rejected
         events:
           type: array
           items:

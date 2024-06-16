@@ -37,6 +37,7 @@ export interface MutableJobPosting {
     jobLink: string;
     resumeLink: string;
     status: JobPostingStatusEnum;
+    notes: String;
 }
 
 export async function PUT(
@@ -59,7 +60,8 @@ export async function PUT(
             jobTitle: body.jobTitle,
             jobLink: body.jobLink,
             resumeLink: body.resumeLink,
-            status: body.status
+            status: body.status,
+            notes: body.notes,
         }
     });
 

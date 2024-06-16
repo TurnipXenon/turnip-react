@@ -36,6 +36,7 @@ model JobPosting {
   resumeLink String?
   startDate  DateTime   @default(now())
   status     PostStatus @default(Queued)
+  notes      String     @default("")
 
   JobSession JobSession @relation(fields: [sessionId, userId], references: [id, userId], onDelete: Cascade, onUpdate: Cascade)
   sessionId  String

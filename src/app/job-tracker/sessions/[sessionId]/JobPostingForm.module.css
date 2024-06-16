@@ -1,0 +1,11 @@
+
+.postingFormContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1em;
+}
+
+.postingFormContainerChild {
+    width: min(20em, 100%);
+}

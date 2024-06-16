@@ -3,8 +3,7 @@ import {TurnipAuth} from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import {SessionRouteSlug} from "@/lib/models/SlugGeneric";
 import {JobSession} from "@prisma/client";
-
-export const INCLUDE_POSTINGS_PARAMS = "includePostings";
+import {INCLUDE_POSTINGS_PARAMS} from "@/app/api/job-tracker/sessions/[sessionId]/routeParams";
 
 export async function GET(
     request: NextRequest,

@@ -28,11 +28,6 @@ import {JobEvent} from "@/lib/openapi/index";
 //     return NextResponse.json(jobSession);
 // }
 
-export interface MutableJobEvent {
-    anonymizedNotes: string;
-    publicNotes: string;
-}
-
 export async function PUT(
     request: NextRequest,
     {params}: EventRouteSlug

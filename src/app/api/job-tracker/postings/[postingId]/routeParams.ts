@@ -7,5 +7,5 @@ export interface MutableJobPosting {
     jobLink: string;
     resumeLink: string;
     status: JobPostingStatusEnum;
-    notes: String;
+    notes: string;
 }

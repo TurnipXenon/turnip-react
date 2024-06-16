@@ -3,9 +3,9 @@ import {Button, Card, Select, Text, TextInput} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {useContext, useEffect, useState} from "react";
 import {TurnipContext} from "@/app/context";
-import {MutableJobPosting} from "@/app/api/job-tracker/postings/[postingId]/route";
 import JobEventForm from "@/app/job-tracker/sessions/[sessionId]/JobEventForm";
 import styles from "./JobPostingForm.module.css";
+import {MutableJobPosting} from "@/app/api/job-tracker/postings/[postingId]/routeParams";
 
 export interface JobPostingFormProps {
     key: string;
@@ -40,6 +40,7 @@ export default function JobPostingForm(props: JobPostingFormProps) {
             jobLink: props.posting.jobLink ?? "",
             resumeLink: props.posting.resumeLink ?? "",
             status: props.posting.status ?? JobPostingStatusEnum.Queued,
+            notes: props.posting.notes ?? "",
         },
     });
 

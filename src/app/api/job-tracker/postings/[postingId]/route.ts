@@ -2,9 +2,7 @@ import {NextRequest, NextResponse} from "next/server";
 import {TurnipAuth} from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import {PostingRouteSlug} from "@/lib/models/SlugGeneric";
-import {JobPosting, JobPostingStatusEnum} from "@/lib/openapi/index";
-
-export const INCLUDE_POSTINGS_PARAMS = "includePostings";
+import {JobPosting} from "@/lib/openapi/index";
 
 // todo
 // export async function GET(
@@ -30,15 +28,6 @@ export const INCLUDE_POSTINGS_PARAMS = "includePostings";
 //     return NextResponse.json(jobSession);
 // }
 
-export interface MutableJobPosting {
-    alias: string;
-    company: string;
-    jobTitle: string;
-    jobLink: string;
-    resumeLink: string;
-    status: JobPostingStatusEnum;
-    notes: String;
-}
 
 export async function PUT(
     request: NextRequest,

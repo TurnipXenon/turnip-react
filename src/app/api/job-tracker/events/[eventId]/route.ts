@@ -1,10 +1,8 @@
 import {NextRequest, NextResponse} from "next/server";
 import {TurnipAuth} from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import {EventRouteSlug, PostingRouteSlug} from "@/lib/models/SlugGeneric";
-import {JobEvent, JobPosting} from "@/lib/openapi/index";
-
-export const INCLUDE_POSTINGS_PARAMS = "includePostings";
+import {EventRouteSlug} from "@/lib/models/SlugGeneric";
+import {JobEvent} from "@/lib/openapi/index";
 
 // todo
 // export async function GET(
@@ -29,11 +27,6 @@ export const INCLUDE_POSTINGS_PARAMS = "includePostings";
 //
 //     return NextResponse.json(jobSession);
 // }
-
-export interface MutableJobEvent {
-    anonymizedNotes: string;
-    publicNotes: string;
-}
 
 export async function PUT(
     request: NextRequest,

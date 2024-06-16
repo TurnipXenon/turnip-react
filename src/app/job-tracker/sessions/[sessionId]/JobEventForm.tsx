@@ -1,9 +1,9 @@
-import {JobEvent, JobPostingStatusEnum} from "@/lib/openapi/index";
-import {Button, Select, Text, TextInput} from "@mantine/core";
+import {JobEvent} from "@/lib/openapi/index";
+import {Button, Text, TextInput} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {useContext} from "react";
 import {TurnipContext} from "@/app/context";
-import {MutableJobEvent} from "@/app/api/job-tracker/events/[eventId]/route";
+import {MutableJobEvent} from "@/app/api/job-tracker/events/[eventId]/routeParams";
 
 export interface JobEventFormProps {
     key: string;

@@ -32,4 +32,11 @@ You can view your images created with docker images.
 ## Notes
 
 - generate OpenAPI using typescript-axios
-  - should be in src/lib/openapi
+    - should be in src/lib/openapi
+- Change of approach, I'll keep my job posting server offline, and only post the results later
+
+## TODO
+
+- Add job events
+- Add ability to update job events
+- Add ability to delete job events

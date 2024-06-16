@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Turnip React API
-  version: 0.4.0
+  version: 0.6.0
 
 servers:
   - url: https://react.turnipxenon.com
@@ -21,6 +21,58 @@ components:
           type: string
         id:
           type: string
+    JobEvent:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+        anonymizedNotes:
+          type: string
+        publicNotes:
+          type: string
+        eventDate:
+          type: string
+        jobPostingId:
+          type: string
+    JobPosting:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+        alias:
+          type: string
+        company:
+          type: string
+        jobTitle:
+          type: string
+        jobLink:
+          type: string
+        resumeLink:
+          type: string
+        startDate:
+          type: string
+        sessionId:
+          type: string
+        userId:
+          type: string
+        notes:
+          type: string
+        status:
+          type: string
+          enum:
+            - Queued
+            - Archived
+            - Waiting
+            - Active
+            - Rejected
+        events:
+          type: array
+          items:
+            $ref: "#/components/schemas/JobEvent"
     JobSession:
       type: object
       required:
@@ -43,6 +95,10 @@ components:
           type: string
         isPublic:
           type: boolean
+        jobPostings:
+          type: array
+          items:
+            $ref: "#/components/schemas/JobPosting"
   parameters:
     JobSessionParameterID:
       name: sessionId   # Note the name is the same as in the path
@@ -56,6 +112,20 @@ components:
       in: path
       required: true
       description: The user ID
+      schema:
+        type: string
+    PostingParameterID:
+      name: postingId   # Note the name is the same as in the path
+      in: path
+      required: true
+      description: The job posting ID
+      schema:
+        type: string
+    EventParameterID:
+      name: eventId   # Note the name is the same as in the path
+      in: path
+      required: true
+      description: The job event ID
       schema:
         type: string
 
@@ -128,11 +198,10 @@ paths:
         '404':
           description: Missing job session
 
-  /api/job-tracker/users/{userId}/sessions/{sessionId}:
+  /api/job-tracker/sessions/{sessionId}:
     get:
       summary: Get job session
       parameters:
-        - $ref: "#/components/parameters/UserParameterID"
         - $ref: "#/components/parameters/JobSessionParameterID"
       responses:
         '200':
@@ -148,7 +217,6 @@ paths:
     put:
       summary: Update job session
       parameters:
-        - $ref: "#/components/parameters/UserParameterID"
         - $ref: "#/components/parameters/JobSessionParameterID"
       requestBody:
         required: true
@@ -172,7 +240,6 @@ paths:
     delete:
       summary: Delete job session
       parameters:
-        - $ref: "#/components/parameters/UserParameterID"
         - $ref: "#/components/parameters/JobSessionParameterID"
       responses:
         '200':
@@ -181,3 +248,200 @@ paths:
           description: Unauthorized error
         '404':
           description: Missing job session
+
+  /api/job-tracker/sessions/{sessionId}/postings:
+    post:
+      summary: Create new job posting
+      parameters:
+        - $ref: "#/components/parameters/JobSessionParameterID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                alias:
+                  type: string
+                company:
+                  type: string
+                jobTitle:
+                  type: string
+                jobLink:
+                  type: string
+      responses:
+        '200':
+          description: Job sessions created
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/JobSession"
+                  - type: object
+                    properties:
+                      cursorId:
+                        type: string
+        '401':
+          description: Unauthorized error
+    get:
+      summary: Get all job postings for the session
+      parameters:
+        - $ref: "#/components/parameters/JobSessionParameterID"
+      responses:
+        '200':
+          description: Job sessions found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/JobSession"
+        '401':
+          description: Unauthorized error
+        '404':
+          description: Missing job session
+
+  /api/job-tracker/postings/{postingId}:
+    get:
+      summary: Get job posting
+      parameters:
+        - $ref: "#/components/parameters/PostingParameterID"
+      responses:
+        '200':
+          description: Job posting found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobPosting"
+        '401':
+          description: Unauthorized error
+        '404':
+          description: Missing job posting
+    put:
+      summary: Update job posting
+      parameters:
+        - $ref: "#/components/parameters/PostingParameterID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JobPosting"
+      responses:
+        '200':
+          description: Job posting updated
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/JobPosting"
+        '401':
+          description: Unauthorized error
+        '404':
+          description: Missing job posting
+    delete:
+      summary: Delete job posting
+      parameters:
+        - $ref: "#/components/parameters/PostingParameterID"
+      responses:
+        '200':
+          description: Successfully delete job session
+        '401':
+          description: Unauthorized error
+        '404':
+          description: Missing job posting
+
+  /api/job-tracker/postings/{postingId}/events:
+    post:
+      summary: Create new job event
+      parameters:
+        - $ref: "#/components/parameters/PostingParameterID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+      responses:
+        '200':
+          description: Job sessions created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobEvent"
+        '401':
+          description: Unauthorized error
+    get:
+      summary: Get all job events for the posting
+      parameters:
+        - $ref: "#/components/parameters/PostingParameterID"
+      responses:
+        '200':
+          description: Job events found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/JobEvent"
+        '401':
+          description: Unauthorized error
+        '404':
+          description: Missing job session
+
+  /api/job-tracker/events/{eventId}:
+    get:
+      summary: Get job event
+      parameters:
+        - $ref: "#/components/parameters/EventParameterID"
+      responses:
+        '200':
+          description: Job event found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/JobEvent"
+        '401':
+          description: Unauthorized error
+        '404':
+          description: Missing job posting
+    put:
+      summary: Update job event
+      parameters:
+        - $ref: "#/components/parameters/EventParameterID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JobEvent"
+      responses:
+        '200':
+          description: Job event updated
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/JobPosting"
+        '401':
+          description: Unauthorized error
+        '404':
+          description: Missing job event
+    delete:
+      summary: Delete job posting
+      parameters:
+        - $ref: "#/components/parameters/EventParameterID"
+      responses:
+        '200':
+          description: Successfully delete job event
+        '401':
+          description: Unauthorized error
+        '404':
+          description: Missing job event
